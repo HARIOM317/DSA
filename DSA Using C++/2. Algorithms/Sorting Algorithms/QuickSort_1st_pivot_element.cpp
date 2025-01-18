@@ -8,33 +8,26 @@ worst case - O(N^2)
 
 using namespace std;
 
-void swap(int arr[], int i, int j)
-{
-    int temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-}
-
 int partition(int arr[], int low, int high)
 {
     int pivot = arr[low];
-    int i = high;
+    int pivotIndex = high;
 
     for (int j = high; j > low; j--)
     {
         if (arr[j] > pivot)
         {
-            swap(arr, j, i);
-            i--;
+            swap(arr[pivotIndex], arr[j]);
+            pivotIndex--;
         }
     }
-    swap(arr, low, i);
-    return i;
+    swap(arr[low], arr[pivotIndex]);
+    return pivotIndex;
 }
 
 void quickSort(int arr[], int low, int high)
 {
-    if (low < high)
+    if (low < high) // base case
     {
         int pi = partition(arr, low, high);
         quickSort(arr, low, pi - 1);
@@ -48,7 +41,7 @@ int main()
     cout << "Enter size of array : ";
     cin >> n;
 
-    int arr[n];
+    int *arr = new int[n];
     cout << "Enter arrays elements\n";
     for (int i = 0; i < n; i++)
     {
@@ -62,6 +55,8 @@ int main()
     {
         cout << arr[i] << " ";
     }
+
+    delete[] arr;
 
     return 0;
 }

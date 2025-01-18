@@ -4,43 +4,33 @@ using namespace std;
 
 int binarySearch(int arr[], int n, int key)
 {
-    int starting_point = 0;
-    int ending_point = n;
-    while (starting_point <= ending_point)
+    int low = 0, high = n - 1;
+    while (low <= high)
     {
-        int mid = (starting_point + ending_point) / 2;
-
-        if (arr[mid] == key)
-        {
-            return mid;
-        }
+        int mid = low + (high - low) / 2; // equivalent to (low+high)/2, but it is correct for integer range that is 2^31-1, because int can't store value more than this range.
+        if (arr[mid] < key)
+            low = mid + 1;
         else if (arr[mid] > key)
-        {
-            ending_point = mid - 1;
-        }
+            high = mid - 1;
         else
-        {
-            starting_point = mid + 1;
-        }
+            return mid;
     }
     return -1;
 }
 
 int main()
 {
-    int n;
-    cout << "Enter size of array:  ";
-    cin >> n;
-    int arr[n];
-    cout << "Enter arrays element in sorting order: \n";
-    for (int i = 0; i < n; i++)
+    int arr[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int key = 5;
+    int result = binarySearch(arr, 10, key);
+    if (result != -1)
     {
-        cin >> arr[i];
+        cout << "Element is present at index " << result << endl;
     }
-    int key;
-    cout << "Enter key for searching :   ";
-    cin >> key;
+    else
+    {
+        cout << "Element is not present in array" << endl;
+    }
 
-    cout << "Element " << key << " presents on index " << binarySearch(arr, n, key);
     return 0;
 }

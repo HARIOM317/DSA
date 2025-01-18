@@ -1,41 +1,38 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
+// to print first n prime numbers
 void primeSieve(int n)
 {
-    int prime[1000] = {0};
+    if (n < 2)
+    {
+        cout << "No prime numbers" << endl;
+        return;
+    }
+    vector<bool> prime(n, true); // creating n size of vector with marking all element as prime true
+    prime[0] = prime[1] = false;
+
+    cout << "\nPrime numbers are: ";
     for (int i = 2; i <= n; i++)
     {
-        if (prime[i] == 0)
+        if (prime[i])
         {
+            cout << i << " ";
             for (int j = i * i; j <= n; j += i)
             {
-                prime[j] = 1;
+                prime[j] = false; // marking multiple of i as false
             }
         }
     }
-    for (int i = 2; i <= n; i++)
-    {
-        if (prime[i] == 0)
-        {
-            cout << i << " ";
-        }
-    }
-    cout << endl;
 }
 
 int main()
 {
-    // Find prime number using sieve of eratosthenes approach
-
-    // Principle - start from 2 and mark all the multiples of 2 and move on 3 and mark all the multiple of 3 and so on.
-    // Foe every number start marking from that's square, ex- for 2 start from 4, for 3 start from 9, ..., for 7 start from 49 and so on.
-
     int n;
-    cout << "Enter number : ";
+    cout << "Enter a number: ";
     cin >> n;
-
     primeSieve(n);
 
     return 0;

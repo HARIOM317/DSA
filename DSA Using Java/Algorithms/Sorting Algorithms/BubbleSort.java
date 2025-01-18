@@ -1,35 +1,33 @@
 public class BubbleSort {
-    public static void printArray(int[] arr){
-        for (int j : arr) {
-            System.out.print(j + " ");
-        }
-        System.out.println();
-    }
-    public static void main(String[] args) {
-        int[] arr = {7, 8, 3, 1, 2, 11, 9};
-        System.out.println("Ascending Order");
-        for (int i = 0; i < arr.length-1; i++){
-            for (int j = 0; j < arr.length-i-1; j++){
+    public static void bubbleSort(int[] arr){
+        int swap = 0;
+        for (int i = 0; i < arr.length-2; i++){
+            for(int j = 0; j < arr.length-1-i; j++){
                 if(arr[j] > arr[j+1]){
-                    // swapping using a third variable
                     int temp = arr[j];
                     arr[j] = arr[j+1];
                     arr[j+1] = temp;
+                    swap++;
                 }
             }
-        }
-        printArray(arr);
-        System.out.println("Descending Order");
-        for (int i = 0; i < arr.length-1; i++){
-            for (int j = 0; j < arr.length-i-1; j++){
-                if (arr[j] < arr[j+1]){
-                    // swapping without using a third variable
-                    arr[j] = arr[j] + arr[j+1];
-                    arr[j+1] = arr[j]-arr[j+1];
-                    arr[j] = arr[j] - arr[j+1];
-                }
+
+            if(swap == 0){
+                break;
             }
         }
-        printArray(arr);
+
+        System.out.println("No. of Swapping Performed: "+ swap);
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {5, 4, 1, 3, 2, 7, 6, 12, 8, 7};
+        // int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        bubbleSort(arr);
+
+        // Printing sorted elements
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
     }
 }

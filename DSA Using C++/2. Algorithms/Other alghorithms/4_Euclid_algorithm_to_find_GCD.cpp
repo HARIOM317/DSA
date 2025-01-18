@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <iostream>
 
 using namespace std;
 
@@ -22,9 +22,10 @@ Suppose numbers are 42 and 24
 18 % 6  = 0 (breaking point)
 */
 
-// Euclid algorithm
-int gcd(int a, int b)
+// Euclid algorithm (Using iterative approach)
+int gcdIterative(int a, int b)
 {
+    // make any one number 0 and return another number
     while (b != 0)
     {
         int rem = a % b;
@@ -34,13 +35,21 @@ int gcd(int a, int b)
     return a;
 }
 
+int gcdRecursive(int a, int b)
+{
+    if (a == 0)
+        return b;
+    return gcdRecursive(b % a, a);
+}
+
 int main()
 {
     int a, b;
-    cout << "Enter two numbers for GCD/HCF : \n";
+    cout << "Enter two numbers for GCD/HCF : ";
     cin >> a >> b;
 
-    cout << "GCD/HCF = " << gcd(a, b) << endl;
+    cout << "GCD using Iterative approach = " << gcdIterative(a, b) << endl;
+    cout << "GCD using Recursive approach = " << gcdRecursive(a, b) << endl;
 
     return 0;
 }
