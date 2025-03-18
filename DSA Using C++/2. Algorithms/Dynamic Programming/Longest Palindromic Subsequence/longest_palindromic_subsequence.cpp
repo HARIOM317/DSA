@@ -17,8 +17,7 @@ int lps(string str)
 
     for (int i = n - 1; i >= 0; i--)
     {
-        for (int j = n - 1; j >= 0; j--)
-        {
+        for (int j = n - 1; j >= 0; j--)        {
             int length = 0;
 
             if (str[i] == str2[j])
