@@ -101,7 +101,6 @@ Follow these steps to set up the repository on your local machine:
    ```
 
 3. **Explore the Modules:**  
-   Each folder includes a detailed README to guide you through the material. Start with the module that interests you the most.
 
 ---
 
