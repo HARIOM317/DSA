@@ -26,10 +26,10 @@ string decimalToBinary(int n)
 
     while (n > 0)
     {
-        int lastDigit = n % 2;
+        int rem = n % 2;
         n = n >> 1; // n /= 2
 
-        binary += (lastDigit == 0 ? "0" : "1");
+        binary += (rem == 0 ? "0" : "1");
     }
 
     binary = reverseString(binary);

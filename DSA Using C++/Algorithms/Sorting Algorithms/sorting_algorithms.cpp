@@ -70,13 +70,13 @@ void insertionSort(vector<int> arr)
 {
     for (int i = 1; i < arr.size(); i++)
     {
-        int current = arr[i], j = i - 1;
-        while (j >= 0 && arr[j] > current) // for decreasing order (arr[j] < current)
+        int current = arr[i], prev = i - 1;
+        while (prev >= 0 && arr[prev] > current) // for decreasing order (arr[j] < current)
         {
-            arr[j + 1] = arr[j];
-            j--;
+            arr[prev + 1] = arr[prev];
+            prev--;
         }
-        arr[j + 1] = current;
+        arr[prev + 1] = current;
     }
 
     // printing array

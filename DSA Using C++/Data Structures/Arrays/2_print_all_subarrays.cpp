@@ -12,7 +12,7 @@ void printSubArrays(int arr[], int n)
     {
         for (int j = i; j < n; j++)
         {
-            cout << count << ".  {";
+            cout << count << ". {";
             for (int k = i; k <= j; k++)
             {
                 cout << arr[k] << (k != j ? "," : "");
