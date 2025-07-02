@@ -1,96 +1,85 @@
 #include <iostream>
 
 using namespace std;
+
 // Note: Merge sort algorithm follows divide and conquer algorithm
-// Time complexity = NlogN
+// Time complexity = O(nlogn)
+// Space complexity = O(n)
 
-void merge(int arr[], int start, int end)
+// Time: O(n)
+void merge(int *arr, int st, int mid, int end)
 {
-    int mid = start + (end - start) / 2;
-    // creating two temporally arrays
-    int n1 = mid - start + 1;
-    int n2 = end - mid;
+    int i = st;
+    int j = mid + 1;
+    int n = end - st + 1; // size of array
 
-    int *firstArr = new int[n1];
-    int *secondArr = new int[n2];
-    int index = start;
+    // auxilary array
+    int *temp = new int[n];
 
-    // copying values
-    for (int i = 0; i < n1; i++)
+    int index = 0;
+    // arrange elements in temp array in sorted order
+    while (i <= mid && j <= end)
     {
-        firstArr[i] = arr[index++];
-    }
-    index = mid + 1;
-    for (int i = 0; i < n2; i++)
-    {
-        secondArr[i] = arr[index++];
-    }
-
-    int index1 = 0;
-    int index2 = 0;
-    index = start;
-
-    // merging both arrays in sorted order
-    while (index1 < n1 && index2 < n2)
-    {
-        if (firstArr[index1] < secondArr[index2])
+        if (arr[i] <= arr[j])
         {
-            arr[index++] = firstArr[index1++];
+            temp[index++] = arr[i++];
         }
         else
         {
-            arr[index++] = secondArr[index2++];
+            temp[index++] = arr[j++];
         }
     }
 
-    // merging remaining items of first array
-    while (index1 < n1)
+    while (i <= mid)
     {
-        arr[index++] = firstArr[index1++];
-    }
-    // merging remaining items of second array
-    while (index2 < n2)
-    {
-        arr[index++] = secondArr[index2++];
+        temp[index++] = arr[i++];
     }
 
-    // deallocating array memory
-    delete[] firstArr;
-    delete[] secondArr;
-}
-
-void mergeSort(int arr[], int start, int end)
-{
-    if (start < end)
+    while (j <= end)
     {
-        int mid = start + (end - start) / 2;
-        mergeSort(arr, start, mid);
-        mergeSort(arr, mid + 1, end);
-
-        merge(arr, start, end);
+        temp[index++] = arr[j++];
     }
-}
 
-int main()
-{
-    int n;
-    cout << "Enter size of array : ";
-    cin >> n;
-
-    int *arr = new int[n];
-    cout << "Enter arrays elements\n";
+    // copy sorted elements in original array
     for (int i = 0; i < n; i++)
     {
-        cin >> arr[i];
+        arr[st + i] = temp[i];
     }
 
-    mergeSort(arr, 0, n - 1);
+    // delete temp array
+    delete[] temp; // free memory
+}
 
-    cout << "\nSorted array is\n";
+// divide
+// Time: O(logn)
+void mergeSort(int *arr, int st, int end)
+{
+    if (st < end)
+    {
+        int mid = st + (end - st) / 2;
+        mergeSort(arr, st, mid);
+        mergeSort(arr, mid + 1, end);
+        merge(arr, st, mid, end); // conqure
+    }
+}
+
+// To print array
+void printArray(int *arr, int n)
+{
     for (int i = 0; i < n; i++)
     {
         cout << arr[i] << " ";
     }
+    cout << endl;
+}
+
+int main()
+{
+    int arr[] = {3, 6, 7, 8, 9, 5, 4, 2, 1, 10};
+    int n = sizeof(arr) / sizeof(int);
+
+    mergeSort(arr, 0, n - 1);
+    printArray(arr, n);
 
     return 0;
 }

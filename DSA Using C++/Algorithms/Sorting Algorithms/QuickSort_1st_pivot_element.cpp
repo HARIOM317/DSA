@@ -1,9 +1,12 @@
-// Quick sort also works on divide and conquer algorithm
 /*
-Time complexity:
-best case - O(NlogN)
-worst case - O(N^2)
+    Quick sort also works on divide and conquer algorithm
+        Time complexity:
+            best case - O(NlogN)
+            worst case - O(N^2)
+
+        Space Complexity: O(1)
 */
+
 #include <iostream>
 
 using namespace std;
@@ -11,18 +14,18 @@ using namespace std;
 int partition(int arr[], int low, int high)
 {
     int pivot = arr[low];
-    int pivotIndex = high;
+    int i = high;
 
     for (int j = high; j > low; j--)
     {
         if (arr[j] > pivot)
         {
-            swap(arr[pivotIndex], arr[j]);
-            pivotIndex--;
+            swap(arr[i], arr[j]);
+            i--;
         }
     }
-    swap(arr[low], arr[pivotIndex]);
-    return pivotIndex;
+    swap(arr[low], arr[i]);
+    return i;
 }
 
 void quickSort(int arr[], int low, int high)
