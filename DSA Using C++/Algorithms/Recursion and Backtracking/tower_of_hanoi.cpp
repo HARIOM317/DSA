@@ -2,20 +2,18 @@
 
 using namespace std;
 
-// Time: O(2^n)
+// Time complexity: O(2^n)
 void towerOfHanoi(int n, string src, string helper, string dest)
 {
     // base case
-    if (n == 1)
-    {
-        cout << "Transfer disk " << n << " from " << src << " to " << dest << endl;
+    if (n == 0) {
         return;
     }
 
     // transfet top n-1 from src to helper using dest as 'helper'
     towerOfHanoi(n - 1, src, dest, helper);
 
-    // transfer nth from src to dest
+    // transfer plate
     cout << "Transfer disk " << n << " from " << src << " to " << dest << endl;
 
     // transfet n-1 from helper to dest using src as 'helper'

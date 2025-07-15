@@ -1,111 +1,119 @@
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
-bool isSafe(vector<vector<char>> board, int row, int col, char dig)
+void printSuduko(int arr[9][9])
 {
-    // check horizontally in row
-    for (int j = 0; j < 9; j++)
-    {
-        if (board[row][j] == dig)
-            return false;
-    }
-
-    // check vertically in column
     for (int i = 0; i < 9; i++)
     {
-        if (board[i][col] == dig)
-            return false;
-    }
-
-    // check grid
-    // calculating starting row an col for the current grid
-    int nrow = (row / 3) * 3;
-    int ncol = (col / 3) * 3;
-
-    for (int i = nrow; i <= nrow + 2; i++)
-    {
-        for (int j = ncol; j < ncol + 2; j++)
+        if (i % 3 == 0)
         {
-            if (board[i][j] == dig)
-                return false;
+            cout << "\n";
+        }
+
+        for (int j = 0; j < 9; j++)
+        {
+            if (j % 3 == 0)
+            {
+                cout << "\t";
+            }
+
+            cout << arr[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+bool isValid(int suduko[9][9], int row, int col, int digit)
+{
+    // check horizontally
+    for (int j = 0; j < 9; j++)
+    {
+        if (suduko[row][j] == digit)
+        {
+            return false;
         }
     }
 
-    return true;
+    // check vertically
+    for (int i = 0; i < 9; i++)
+    {
+        if (suduko[i][col] == digit)
+        {
+            return false;
+        }
+    }
+
+    // check 3x3 grid
+    int startRow = (row / 3) * 3;
+    int startCol = (col / 3) * 3;
+
+    for (int i = startRow; i <= startRow + 2; i++)
+    {
+        for (int j = startCol; j <= startCol + 2; j++)
+        {
+            if (suduko[i][j] == digit)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true; // valid place for digit
 }
 
-bool sudokuSolver(vector<vector<char>> &board, int row, int col)
+bool solveSuduko(int suduko[9][9], int row, int col)
 {
     // base case
     if (row == 9)
     {
+        printSuduko(suduko);
         return true;
     }
 
-    // calculating next row and next column
     int nextRow = row, nextCol = col + 1;
-    if (nextCol == 9)
+    if (col + 1 == 9)
     {
         nextRow = row + 1;
         nextCol = 0;
     }
 
-    // check for valid digit
-    if (board[row][col] != '.')
+    // if already digit placed
+    if (suduko[row][col] != 0)
     {
-        return sudokuSolver(board, nextRow, nextCol);
+        return solveSuduko(suduko, nextRow, nextCol);
     }
 
-    // placing the right digit
-    for (char dig = '1'; dig <= '9'; dig++)
+    // place digit
+    for (int digit = 1; digit <= 9; digit++)
     {
-        if (isSafe(board, row, col, dig))
+        if (isValid(suduko, row, col, digit))
         {
-            board[row][col] = dig; // placing the correct digit
-            // if next digit placement is correct
-            if (sudokuSolver(board, nextRow, nextCol))
+            suduko[row][col] = digit;
+            if (solveSuduko(suduko, nextRow, nextCol))
             {
                 return true;
             }
-            board[row][col] = '.'; // backtracking for incorrect placement
+            suduko[row][col] = 0; // backtrack
         }
     }
 
-    return false;
-}
-
-void solveSudoku(vector<vector<char>> &board)
-{
-    sudokuSolver(board, 0, 0);
+    return false; // no solution found
 }
 
 int main()
 {
-    vector<vector<char>> board = {
-        {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
-        {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
-        {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
-        {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
-        {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
-        {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
-        {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
-        {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
-        {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+    int matrix[9][9] = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
+                        {5, 2, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 8, 7, 0, 0, 0, 0, 3, 1},
+                        {0, 0, 3, 0, 1, 0, 0, 8, 0},
+                        {9, 0, 0, 8, 6, 3, 0, 0, 5},
+                        {0, 5, 0, 0, 9, 0, 6, 0, 0},
+                        {1, 3, 0, 0, 0, 0, 2, 5, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 7, 4},
+                        {0, 0, 5, 2, 0, 6, 3, 0, 0}};
 
-    solveSudoku(board);
-
-    // printing solved sudoku
-    cout << "Solved sudoku is\n";
-    for (int i = 0; i < 9; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            cout << board[i][j] << " ";
-        }
-        cout << endl;
-    }
+    solveSuduko(matrix, 0, 0);
 
     return 0;
 }
