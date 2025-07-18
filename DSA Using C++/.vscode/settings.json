@@ -63,6 +63,7 @@
     "list": "cpp",
     "unordered_map": "cpp",
     "regex": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "random": "cpp"
   }
 }

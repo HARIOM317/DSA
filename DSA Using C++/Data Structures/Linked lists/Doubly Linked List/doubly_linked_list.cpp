@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// Node
 class Node
 {
 public:
@@ -9,295 +10,378 @@ public:
     Node *prev;
     Node *next;
 
-    // constructor
-    Node(int data)
+    // Constructor
+    Node(int val)
     {
-        this->data = data;
-        this->prev = NULL;
-        this->next = NULL;
+        this->data = val;
+        this->prev = this->next = nullptr;
     }
 
-    // destructor
+    // Destructor
     ~Node()
     {
         cout << "Deleted: " << this->data << endl;
     }
 };
 
-void print(Node *&head)
+// Doubly Linked List
+class DoublyList
 {
-    if (head == NULL)
+    int length;
+    Node *head;
+    Node *tail;
+
+public:
+    // constructor
+    DoublyList()
     {
-        cout << "Empty List!" << endl;
-        return;
+        length = 0;
+        head = tail = nullptr;
     }
 
-    Node *temp = head;
-    cout << endl
-         << "Linked List: ";
-    while (temp != NULL)
+    // destructor
+    ~DoublyList()
     {
-        cout << temp->data << " ";
-        temp = temp->next;
-    }
-    cout << endl
-         << endl;
-}
-
-int length(Node *&head)
-{
-    Node *temp = head;
-    int len = 0;
-    while (temp != NULL)
-    {
-        len++;
-        temp = temp->next;
-    }
-    return len;
-}
-
-void insertAtFirst(Node *&head, Node *&tail, int data)
-{
-    Node *newNode = new Node(data);
-
-    if (head == NULL)
-    {
-        head = newNode;
-        tail = newNode;
-    }
-    else
-    {
-        newNode->next = head;
-        head->prev = newNode;
-        head = newNode;
-    }
-}
-
-void insertAtLast(Node *&head, Node *&tail, int data)
-{
-    Node *newNode = new Node(data);
-
-    if (tail == NULL)
-    {
-        head = newNode;
-        tail = newNode;
-    }
-    else
-    {
-        tail->next = newNode;
-        newNode->prev = tail;
-        tail = newNode;
-    }
-}
-
-void insertAtIndex(Node *&head, Node *&tail, int index, int data)
-{
-    if (index < 0)
-    {
-        cout << "Invalid index!\n";
-        return;
+        cout << "\nCleaning up list...\n";
+        while (head != nullptr)
+        {
+            pop_front();
+        }
     }
 
-    if (index == 0)
+    // __________ INSERTION __________
+
+    // 1. insert node at front
+    void push_front(int val)
     {
-        insertAtFirst(head, tail, data);
-        return;
+        Node *newNode = new Node(val);
+
+        if (head == nullptr)
+        {
+            head = tail = newNode;
+        }
+        else
+        {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+
+        length++;
     }
 
-    Node *temp = head;
-    int i = 0;
-    while (i < index - 1 && temp != NULL)
+    // 2. insert node at back
+    void push_back(int val)
     {
-        temp = temp->next;
-        i++;
+        Node *newNode = new Node(val);
+        if (tail == nullptr)
+        {
+            head = tail = newNode;
+        }
+        else
+        {
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
+
+        length++;
     }
 
-    if (temp == NULL)
+    // 3. insert node at given position
+    void insert(int val, int pos)
     {
-        cout << "Index out of bound!\n";
-        delete temp;
-        return;
+        if (pos < 0 || pos > length)
+        {
+            cout << "Invalid position!\n";
+        }
+        else if (pos == 0)
+        {
+            // case 1 : insert at first
+            push_front(val);
+        }
+        else if (pos == length)
+        {
+            // case 2 : insert at last
+            push_back(val);
+        }
+        else
+        {
+            // case 3 : insert at middle
+            Node *newNode = new Node(val);
+
+            Node *temp = head;
+
+            for (int i = 0; i < pos; i++)
+            {
+                temp = temp->next;
+            }
+
+            newNode->next = temp;
+            newNode->prev = temp->prev;
+            temp->prev->next = newNode;
+            temp->prev = newNode;
+
+            length++;
+        }
     }
 
-    if (temp->next == NULL)
+    // __________ DELETION __________
+    // 1. remove first node
+    void pop_front()
     {
-        insertAtLast(head, tail, data);
-        return;
+        if (head == nullptr)
+        {
+            cout << "List is empty!\n";
+            return;
+        }
+        else if (head == tail)
+        {
+            delete head;
+            head = tail = nullptr;
+        }
+        else
+        {
+            Node *temp = head;
+            head = head->next;
+
+            head->prev = nullptr;
+            temp->next = nullptr;
+            delete temp;
+        }
+
+        length--;
     }
 
-    Node *newNode = new Node(data);
-    newNode->next = temp->next;
-    temp->next->prev = newNode;
-    temp->next = newNode;
-    newNode->prev = temp;
-}
-
-void deleteFirst(Node *&head, Node *&tail)
-{
-    if (head == NULL)
+    // 2. remove last node
+    void pop_back()
     {
-        cout << "Empty list!" << endl;
-        return;
+        if (head == nullptr)
+        {
+            cout << "List is empty!\n";
+            return;
+        }
+        else if (head == tail)
+        {
+            delete tail;
+            head = tail = nullptr;
+        }
+        else
+        {
+            Node *temp = tail;
+            tail = tail->prev;
+
+            tail->next = nullptr;
+            temp->prev = nullptr;
+            delete temp;
+        }
+
+        length--;
     }
-    if (head->next == NULL)
+
+    // 3. remove node at given position
+    void remove(int pos)
+    {
+        if (pos < 0 || pos >= length)
+        {
+            cout << "Invalid position!\n";
+        }
+        else if (pos == 0)
+        {
+            // case 1 : delete first node
+            pop_front();
+        }
+        else if (pos == length - 1)
+        {
+            // case 2 : delete last node
+            pop_back();
+        }
+        else
+        {
+            // case 3 : delete middle node
+            Node *temp = head;
+            for (int i = 0; i < pos; i++)
+            {
+                temp = temp->next;
+            }
+
+            temp->prev->next = temp->next;
+            temp->next->prev = temp->prev;
+            temp->prev = temp->next = nullptr;
+            delete temp;
+
+            length--;
+        }
+    }
+
+    // 4. to remove node by value
+    void deleteValue(int val)
     {
         Node *temp = head;
-        head = NULL;
-        tail = NULL;
-        delete temp;
-        return;
-    }
-    Node *temp = head;
-    head = head->next;
-    head->prev = NULL;
-    delete temp;
-}
-
-void deleteIndex(Node *&head, Node *&tail, int index)
-{
-    if (index < 0)
-    {
-        cout << "Invalid index\n";
-        return;
-    }
-    if (index == 0)
-    { // delete first node
-        deleteFirst(head, tail);
-        return;
-    }
-    int i = 0;
-    Node *temp = head;
-
-    while (i < index && temp != NULL)
-    {
-        temp = temp->next;
-        i++;
-    }
-
-    if (temp == NULL)
-    {
-        cout << "Index out of bound!\n";
-        return;
-    }
-
-    if (temp->next == NULL)
-    { // delete last node
-        tail = temp->prev;
-        tail->next = NULL;
-        delete temp;
-        return;
-    }
-
-    // delete a middle node
-    temp->prev->next = temp->next;
-    temp->next->prev = temp->prev;
-    delete temp;
-}
-
-void deleteValue(Node *&head, Node *&tail, int value)
-{
-    Node *temp = head;
-    while (temp != NULL)
-    {
-        if (temp->data == value)
+        while (temp != nullptr)
         {
-            // case 1 - delete first node
-            if (temp == head)
+            if (temp->data == val)
             {
-                deleteFirst(head, tail);
+                Node *toDelete = temp;
+                temp = temp->next;
+
+                if (toDelete == head)
+                {
+                    // case 1 - delete first node
+                    pop_front();
+                }
+                else if (toDelete == tail)
+                {
+                    // case 2 - delete last node
+                    pop_back();
+                }
+                else
+                {
+                    // case 3 - delete middle node
+                    toDelete->prev->next = toDelete->next;
+                    toDelete->next->prev = toDelete->prev;
+                    toDelete->prev = toDelete->next = nullptr;
+                    delete toDelete;
+                    length--;
+                }
                 return;
             }
             else
             {
-                if (temp->next == NULL)
-                {
-                    tail = temp->prev;
-                    tail->next = NULL;
-                    delete temp;
-                    return;
-                }
-                temp->prev->next = temp->next;
-                temp->next->prev = temp->prev;
-                delete temp;
-                return;
+                temp = temp->next;
             }
         }
-        temp = temp->next;
     }
 
-    cout << value << " is not present in the list!\n";
-}
+    // __________ OTHER OPERATIONS __________
 
-void reverse(Node *&head, Node *&tail)
-{
-    if (head == NULL || head->next == NULL)
-        return;
-
-    Node *temp = NULL;
-    Node *curr = head;
-
-    // traverse and swap temp and curr
-    while (curr != NULL)
+    // 1. to print doubly linked list
+    void print() const
     {
-        // swapping next and prev pointer
-        temp = curr->prev;
-        curr->prev = curr->next;
-        curr->next = temp;
+        if (head == nullptr)
+        {
+            cout << "\nEmpty List!\n\n";
+            return;
+        }
 
-        curr = curr->prev;
+        Node *temp = head; // local pointer variable
+        cout << "\nNULL <= ";
+        while (temp != nullptr)
+        {
+            cout << temp->data << ((temp->next == nullptr) ? " => " : " <=> ");
+            temp = temp->next;
+        }
+        cout << "NULL\n\n";
     }
 
-    // updating head and tail pointer
-    temp = head;
-    head = tail;
-    tail = temp;
-}
+    // 2. to reverse doubly linked list
+    void reverse()
+    {
+        if (head == nullptr || head->next == nullptr)
+            return;
+
+        Node *temp = nullptr;
+        Node *curr = head;
+
+        while (curr != nullptr)
+        {
+            // swapping prev and next pointers
+            temp = curr->prev;
+            curr->prev = curr->next;
+            curr->next = temp;
+
+            // update curr
+            curr = curr->prev;
+        }
+
+        // update head & tail
+        temp = head;
+        head = tail;
+        tail = temp;
+    }
+
+    // 3. to get front element
+    int front() const
+    {
+        if (head == nullptr)
+            return -1;
+        return this->head->data;
+    }
+
+    // 4. to get last element
+    int back() const
+    {
+        if (tail == nullptr)
+            return -1;
+        return this->tail->data;
+    }
+
+    // 5. to get size of doubly linked list
+    int size() const
+    {
+        return this->length;
+    }
+
+    // 6. to find element
+    bool find(int val) const
+    {
+        Node *temp = head;
+        while (temp != nullptr)
+        {
+            if (temp->data == val)
+                return true;
+            temp = temp->next;
+        }
+        return false;
+    }
+};
 
 int main()
 {
-    Node *head = NULL;
-    Node *tail = NULL;
+    DoublyList dll;
 
-    insertAtFirst(head, tail, 20);
-    insertAtFirst(head, tail, 10);
+    dll.push_front(30); // NULL <= 30 => NULL
+    dll.push_front(20); // NULL <= 20 <=> 30 => NULL
+    dll.push_front(10); // NULL <= 10 <=> 20 <=> 30 => NULL
 
-    insertAtLast(head, tail, 30);
-    insertAtLast(head, tail, 40);
+    dll.push_back(40); // NULL <= 10 <=> 20 <=> 30 <=> 40 => NULL
+    dll.push_back(50); // NULL <= 10 <=> 20 <=> 30 <=> 40 <=> 50 => NULL
+    dll.push_back(60); // NULL <= 10 <=> 20 <=> 30 <=> 40 <=> 50 <=> 60 => NULL
 
-    insertAtIndex(head, tail, 0, 5);
-    insertAtIndex(head, tail, 5, 45);
-    insertAtIndex(head, tail, 6, 70);
+    dll.insert(100, 0); // NULL <= 100 <=> 10 <=> 20 <=> 30 <=> 40 <=> 50 <=> 60 => NULL
+    dll.insert(200, 5); // NULL <= 100 <=> 10 <=> 20 <=> 30 <=> 40 <=> 200 <=> 50 <=> 60 => NULL
+    dll.insert(500, 8); // NULL <= 100 <=> 10 <=> 20 <=> 30 <=> 40 <=> 200 <=> 50 <=> 60 <=> 500 => NULL
 
-    print(head);
+    dll.print(); // NULL <= 100 <=> 10 <=> 20 <=> 30 <=> 40 <=> 200 <=> 50 <=> 60 <=> 500 => NULL
 
-    deleteFirst(head, tail);
-    deleteFirst(head, tail);
+    dll.pop_front(); // delete 100
+    dll.pop_front(); // delete 10
+    dll.pop_back();  // delete 500
+    dll.pop_back();  // delete 60
 
-    deleteIndex(head, tail, 0);
-    deleteIndex(head, tail, 2);
+    dll.print(); // NULL <= 20 <=> 30 <=> 40 <=> 200 <=> 50 => NULL
 
-    deleteValue(head, tail, 70);
+    dll.remove(0); // delete 20
+    dll.remove(1); // delete 40
+    dll.remove(2); // delete 50
 
-    print(head);
+    dll.print(); // NULL <= 30 <=> 200 => NULL
 
-    int len = length(head);
-    if (len != 0)
-    {
-        cout << "Head: " << head->data << endl;
-        cout << "Tail: " << tail->data << endl;
-    }
+    cout << "Size = " << dll.size() << endl; // 2
 
-    cout << "\nAfter reverse:\n";
-    reverse(head, tail);
-    print(head);
+    cout << "Front: " << dll.front() << endl; // 30
+    cout << "Back: " << dll.back() << endl;   // 200
 
-    if (len != 0)
-    {
-        cout << "Head: " << head->data << endl;
-        cout << "Tail: " << tail->data << endl;
-    }
+    dll.reverse();
+    dll.print(); // NULL <= 200 <=> 30 => NULL
 
-    cout << "Length of the list: " << len << endl;
+    cout << "Found 30: " << (dll.find(30) ? "Yes" : "No") << endl;   // Yes
+    cout << "Found 10: " << (dll.find(10) ? "Yes" : "No") << "\n\n"; // No
+
+    dll.deleteValue(200); // delete 200
+    dll.deleteValue(30);  // delete 300
+
+    dll.print(); // Empty List!
 
     return 0;
 }

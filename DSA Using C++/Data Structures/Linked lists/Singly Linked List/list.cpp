@@ -2,16 +2,17 @@
 
 using namespace std;
 
+// Node
 class Node
 {
 public:
-    Node *next;
     int data;
+    Node *next;
 
-    Node(int value)
+    Node(int val)
     {
-        data = value;
-        next = NULL;
+        data = val;
+        next = nullptr;
     }
 
     ~Node()
@@ -20,269 +21,311 @@ public:
     }
 };
 
+// Linked List
 class List
 {
+    int length;
     Node *head;
     Node *tail;
 
 public:
     List()
     {
-        head = tail = NULL;
+        length = 0;
+        head = nullptr;
+        tail = nullptr;
     }
 
-    // list operations or methods
+    // to print linked list
+    void print()
+    {
+        Node *temp = head; // local pointer variable
+        cout << "\n";
+        while (temp != NULL)
+        {
+            cout << temp->data << "->";
+            temp = temp->next;
+        }
+        cout << "NULL" << "\n\n";
+    }
 
     // _____ INSERTION OPERATION _____
-
-    // push_front() - to insert element at the start of linked list
-    void push_front(int value)
+    // 1. to insert at front
+    void push_front(int val)
     {
-        Node *newNode = new Node(value);
+        Node *newNode = new Node(val);
+
         if (head == NULL)
         {
             head = tail = newNode;
-            return;
         }
-        newNode->next = head;
-        head = newNode;
+        else
+        {
+            newNode->next = head;
+            head = newNode;
+        }
+
+        length++;
     }
 
-    // push_back() - to insert element at the end of linked list
-    void push_back(int value)
+    // 2. to insert at end
+    void push_back(int val)
     {
-        Node *newNode = new Node(value);
+        Node *newNode = new Node(val);
+
         if (tail == NULL)
         {
             head = tail = newNode;
-            return;
         }
-        tail->next = newNode;
-        tail = newNode;
+        else
+        {
+            tail->next = newNode;
+            tail = newNode;
+        }
+
+        length++;
     }
 
-    // insert() - to insert element at given index or pos
-    void insert(int value, int pos)
+    // 3. to insert at given position
+    void insert(int val, int pos)
     {
-        // case 1 - invalid pos
         if (pos < 0)
         {
-            cout << "Invalue index!" << endl;
+            cout << "Invalid index" << endl;
             return;
         }
 
-        // case 2 - pos is 0
         if (pos == 0)
         {
-            push_front(value);
+            push_front(val);
             return;
         }
 
-        // case 3 - pos = size of list
-        int n = size();
-        if (pos == n)
+        if (pos == length)
         {
-            push_back(value);
+            push_back(val);
             return;
         }
 
-        // case 4 - pos is more than size of list
-        if (pos > n)
-        {
-            cout << "Index out of bound!" << endl;
-            return;
-        }
+        Node *newNode = new Node(val);
 
-        // case 5: Insert in middle (General case)
         Node *temp = head;
         for (int i = 0; i < pos - 1; i++)
         {
+            if (temp->next == nullptr)
+            {
+                cout << "Invalid index" << endl;
+                return;
+            }
             temp = temp->next;
         }
 
-        Node *newNode = new Node(value);
         newNode->next = temp->next;
         temp->next = newNode;
+        length++;
     }
 
     // _____ DELETION OPERATION _____
 
-    // pop_front() - to delete first element
+    // 1. to delete first element
     void pop_front()
     {
-        if (head == NULL)
+        if (head != nullptr)
         {
-            cout << "No element to be pop!" << endl;
-            return;
+            Node *temp = head;
+            head = temp->next;
+            temp->next = nullptr;
+            delete temp;
+            length--;
         }
-        Node *temp = head;
-        head = head->next;
-        temp->next = NULL;
-        delete temp;
     }
 
-    // pop_back() - to delete last element
+    // 2. to delete last element
     void pop_back()
     {
-        // case 1: If the list is empty
-        if (tail == NULL)
+        if (tail != nullptr)
         {
-            cout << "No element to be pop!" << endl;
-            return;
-        }
+            Node *temp = head;
+            while (temp->next != tail)
+            {
+                temp = temp->next;
+            }
 
-        // case-2: If there is only one node
-        if (tail == head)
-        {
+            temp->next = nullptr;
             delete tail;
-            head = tail = NULL;
-            return;
+            tail = temp;
+            length--;
         }
-
-        // case-3: When there is multiple nodes
-        Node *curr = head;
-        while (curr->next != tail)
-        {
-            curr = curr->next;
-        }
-
-        curr->next = NULL;
-        delete tail;
-        tail = curr;
     }
 
-    // remove() - to remove element at given pos or index
+    // 3. to delete element at given position
     void remove(int pos)
     {
         if (pos < 0)
         {
-            cout << "Invalid index to pop element!" << endl;
+            cout << "Invalid position!" << endl;
             return;
         }
+
         if (pos == 0)
         {
             pop_front();
             return;
         }
-        if (pos == size() - 1)
+
+        if (pos == length - 1)
         {
             pop_back();
             return;
         }
-        if (pos >= size())
-        {
-            cout << "Index out of bound to pop element!" << endl;
-            return;
-        }
 
-        Node *prev = NULL;
+        Node *prev = nullptr;
         Node *curr = head;
+
         for (int i = 0; i < pos; i++)
         {
+            if (curr->next == nullptr)
+            {
+                cout << "Invalid position!" << endl;
+                return;
+            }
             prev = curr;
             curr = curr->next;
         }
 
         prev->next = curr->next;
-        curr->next = NULL;
+        curr->next = nullptr;
         delete curr;
+        length--;
+    }
+
+    // _____ SEARCH OPERATIONS _____
+
+    // 1. to search iteratively
+    int search(int key)
+    {
+        if (head == nullptr)
+        {
+            cout << "List is empty!" << endl;
+            return -1;
+        }
+
+        Node *temp = head;
+        int pos = 0;
+        while (temp != nullptr)
+        {
+            if (temp->data == key)
+            {
+                return pos;
+            }
+            temp = temp->next;
+            pos++;
+        }
+
+        return -1;
+    }
+
+    // 2. to search recursively
+    int helper(int key, Node *ptr, int pos)
+    {
+        if (ptr == nullptr)
+            return -1;
+        if (ptr->data == key)
+            return pos;
+
+        helper(key, ptr->next, pos + 1);
+    }
+
+    int searchRecursive(int key)
+    {
+        Node *temp = head;
+        return helper(key, temp, 0);
     }
 
     // _____ OTHER OPERATIONS _____
 
-    // printLL() - to print all elements of linked list
-    void printLL()
-    {
-        Node *temp = head;
-        while (temp != NULL)
-        {
-            cout << temp->data << " -> ";
-            temp = temp->next;
-        }
-        cout << "NULL" << endl;
-    }
-
-    // find() - to check wether a element is present in linked list or not
-    bool find(int target)
-    {
-        Node *temp = head;
-        while (temp != NULL)
-        {
-            if (temp->data == target)
-                return true;
-            temp = temp->next;
-        }
-        return false;
-    }
-
-    // size() - to get size of linked list
+    // 1. to get first element
     int size()
     {
-        if (head == NULL)
-            return 0;
-        int len = 0;
-        Node *temp = head;
-        while (temp != NULL)
-        {
-            len++;
-            temp = temp->next;
-        }
-        return len;
+        return this->length;
     }
 
-    int getHead()
+    int front()
     {
-        if (head != NULL)
+        if (head != nullptr)
             return head->data;
         return -1;
     }
 
-    int getTail()
+    // 1. to get last element
+    int back()
     {
-        if (tail != NULL)
+        if (tail != nullptr)
             return tail->data;
         return -1;
+    }
+
+    // 3. to reverse linked list
+    void reverse()
+    {
+        Node *prev = nullptr;
+        Node *curr = head;
+        tail = curr;
+
+        while (curr != nullptr)
+        {
+            Node *next = curr->next;
+            curr->next = prev;
+
+            prev = curr;
+            curr = next;
+        }
+
+        head = prev;
     }
 };
 
 int main()
 {
-    List l;
+    List ll;
 
-    l.push_front(10);
-    l.push_front(20);
-    l.push_front(30);
-    l.push_front(40);
+    ll.push_front(30); // 30->null
+    ll.push_front(20); // 20->30->null
+    ll.push_front(10); // 10->20->30->null
 
-    l.push_back(50);
-    l.push_back(60);
-    l.push_back(70);
-    l.push_back(80);
+    ll.push_back(40); // 10->20->30->40->null
+    ll.push_back(50); // 10->20->30->40->50->null
+    ll.push_back(60); // 10->20->30->40->50->60->null
 
-    l.insert(90, 0);
-    l.insert(45, 5);
-    l.insert(100, 10);
+    ll.insert(5, 0);   // 5->10->20->30->40->50->60->null
+    ll.insert(35, 4);  // 5->10->20->30->35->40->50->60->null
+    ll.insert(100, 8); // 5->10->20->30->35->40->50->60->100->null
 
-    cout << "\nLinked List: ";
-    l.printLL();
-    cout << "Head: " << l.getHead() << endl;
-    cout << "Tail: " << l.getTail() << endl
-         << endl;
+    ll.print();                                    // 5->10->20->30->35->40->50->60->100->null
+    cout << "List size = " << ll.size() << "\n\n"; // 9
 
-    l.pop_front();
-    l.pop_front();
-    l.pop_back();
-    l.pop_back();
-    l.remove(4);
+    ll.pop_front(); // delete 5
+    ll.pop_front(); // delete 10
+    ll.pop_back();  // delete 100
+    ll.pop_back();  // delete 60
 
-    cout << "\nLinked List: ";
-    l.printLL();
-    cout << "Head: " << l.getHead() << endl;
-    cout << "Tail: " << l.getTail() << endl
-         << endl;
+    ll.print(); // 20->30->35->40->50->null
 
-    int target = 45;
-    cout << "Found " << target << ": " << (l.find(target) ? "Yes" : "No") << endl;
+    ll.remove(0); // delete 20
+    ll.remove(1); // delete 35
+    ll.remove(2); // delete 50
+
+    ll.print(); // 30->40->null
+
+    cout << "Found 10 at pos: " << ll.searchRecursive(10) << endl; // -1
+    cout << "Found 40 at pos: " << ll.search(40) << endl;          // 1
+
+    cout << "\nFront element = " << ll.front() << endl; // 30
+    cout << "Back element = " << ll.back() << endl;     // 40
+
+    ll.reverse();
+    ll.print();                                  // 40->30->null
+    cout << "List size = " << ll.size() << endl; // 2
 
     return 0;
 }
