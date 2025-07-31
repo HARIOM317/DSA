@@ -4,71 +4,72 @@ using namespace std;
 
 class Stack
 {
-public:
     // properties
     int *arr;
-    int top;
     int size;
+    int top;
 
-    // behaviour
+public:
+    // constructor
     Stack(int size)
     {
         this->size = size;
+        this->top = -1;
         arr = new int[size];
-        top = -1;
     }
 
-    void push(int data)
+    // to push element - O(1)
+    void push(int val)
     {
-        if (top != size - 1) // size-top > 1
+        if (top == size - 1)
         {
-            top++;
-            arr[top] = data;
+            cout << "Stack overflow!\n";
+            return;
         }
-        else
-        {
-            cout << "Stack Overflow!" << endl;
-        }
+
+        top++;
+        arr[top] = val;
     }
 
+    // to pop element - O(1)
     void pop()
     {
-        if (top != -1)
-        { // top >= 0
-            top--;
-        }
-        else
+        if (top == -1)
         {
-            cout << "Stack underflow!" << endl;
+            cout << "stack underflow!\n";
+            return;
         }
+        arr[top] = 0;
+        top--;
     }
 
+    // to get top element - O(1)
     int peek()
     {
-        if (top >= 0)
+        if (top == -1)
         {
-            return arr[top];
+            cout << "stack is empty!\n";
+            return -1;
         }
-        cout << "Stack is empty!" << endl;
-        return -1;
+        return arr[top];
     }
 
+    // to check stack is empty or not - O(1)
     bool empty()
     {
-        if (top == -1)
-            return true;
-        return false;
+        return top == -1;
+    }
+
+    // to print the stack elements - O(n)
+    void print()
+    {
+        for (int i = 0; i <= top; i++)
+        {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
     }
 };
-
-void print(Stack st)
-{
-    for (int i = 0; i <= st.top; i++)
-    {
-        cout << st.arr[i] << " ";
-    }
-    cout << endl;
-}
 
 int main()
 {
@@ -90,14 +91,14 @@ int main()
     st.push(110); // stack overflow
 
     cout << "Stack elements: ";
-    print(st);
+    st.print();
 
     st.pop();
     st.pop();
     st.pop();
 
     cout << "Stack elements after pop: ";
-    print(st);
+    st.print();
 
     cout << "Is empty: " << (st.empty() ? "Yes" : "No") << endl;
     cout << "Peek: " << st.peek() << endl;

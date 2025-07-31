@@ -2,14 +2,15 @@
 
 using namespace std;
 
-// Node
+// Node (generic)
+template <typename T>
 class Node
 {
 public:
-    int data;
+    T data;
     Node *next;
 
-    Node(int val)
+    Node(T val)
     {
         data = val;
         next = nullptr;
@@ -21,10 +22,11 @@ public:
     }
 };
 
-// Stack
+// Stack (generic)
+template <typename T>
 class Stack
 {
-    Node *head;
+    Node<T> *head;
 
 public:
     Stack()
@@ -32,9 +34,9 @@ public:
         head = nullptr;
     }
 
-    void push(int val) // O(1)
+    void push(T val) // O(1)
     {
-        Node *newNode = new Node(val);
+        Node<T> *newNode = new Node<T>(val);
         newNode->next = head;
         head = newNode;
     }
@@ -47,16 +49,19 @@ public:
             return;
         }
 
-        Node *temp = head;
+        Node<T> *temp = head;
         head = head->next;
         temp->next = nullptr;
         delete temp;
     }
 
-    int top() // O(1)
+    T top() // O(1)
     {
         if (head == nullptr)
-            return -1;
+        {
+            cout << "Stack is empty!\n";
+            return T(); // default value
+        }
         return head->data;
     }
 
@@ -72,11 +77,11 @@ public:
             cout << "\nStack is empty!\n\n";
         }
 
-        Node *temp = head;
+        Node<T> *temp = head;
         cout << "\nStack: ";
         while (temp != nullptr)
         {
-            cout << temp->data << " ";
+            cout << temp->data << (temp->next ? ", " : "");
             temp = temp->next;
         }
         cout << "\n\n";
@@ -85,21 +90,20 @@ public:
 
 int main()
 {
-    Stack s;
+    Stack<string> s;
     cout << "Is stack empty: " << (s.empty() ? "Yes" : "No") << endl;
-    cout << "Top element: " << s.top() << endl;
 
     // push operation
-    s.push(10);
-    s.push(20);
-    s.push(30);
-    s.push(40);
-    s.push(50);
-    s.push(60);
-    s.push(70);
-    s.push(80);
-    s.push(90);
-    s.push(100);
+    s.push("Red");
+    s.push("Blue");
+    s.push("Green");
+    s.push("Pink");
+    s.push("Yellow");
+    s.push("Black");
+    s.push("White");
+    s.push("Orange");
+    s.push("Purple");
+    s.push("Brown");
 
     s.print();
 

@@ -94,6 +94,7 @@ public:
         if (pos < 0 || pos > length)
         {
             cout << "Invalid position!\n";
+            return;
         }
         else if (pos == 0)
         {
@@ -109,7 +110,6 @@ public:
         {
             // case 3 : insert at middle
             Node *newNode = new Node(val);
-
             Node *temp = head;
 
             for (int i = 0; i < pos; i++)
@@ -217,38 +217,95 @@ public:
     // 4. to remove node by value
     void deleteValue(int val)
     {
-        Node *temp = head;
-        while (temp != nullptr)
+        Node *curr = head;
+        while (curr != nullptr)
         {
-            if (temp->data == val)
+            if (curr->data == val)
             {
-                Node *toDelete = temp;
-                temp = temp->next;
+                Node *toDelete = curr;
+                Node *nextNode = curr->next;
 
-                if (toDelete == head)
+                // case 1: delete first node
+                if (curr == head)
                 {
-                    // case 1 - delete first node
-                    pop_front();
+                    head = curr->next;
+                    if (head)
+                        head->prev = nullptr;
                 }
-                else if (toDelete == tail)
+                else if (curr == tail)
                 {
-                    // case 2 - delete last node
-                    pop_back();
+                    // case 2: delete last node
+                    tail = curr->prev;
+                    if (tail)
+                        tail->next = nullptr;
                 }
                 else
                 {
-                    // case 3 - delete middle node
-                    toDelete->prev->next = toDelete->next;
-                    toDelete->next->prev = toDelete->prev;
-                    toDelete->prev = toDelete->next = nullptr;
-                    delete toDelete;
-                    length--;
+                    // case 3: delete middle node
+                    curr->prev->next = curr->next;
+                    if (curr->next)
+                        curr->next->prev = curr->prev;
                 }
+
+                toDelete->prev = toDelete->next = nullptr;
+                delete toDelete;
+                length--;
+
+                // update curr
+                curr = nextNode;
                 return;
             }
             else
             {
-                temp = temp->next;
+                curr = curr->next;
+            }
+        }
+    }
+
+    // 4. to delete all occurrences of givven value
+    void deleteValueAll(int val)
+    {
+        Node *curr = head;
+
+        while (curr != nullptr)
+        {
+            if (curr->data == val)
+            {
+                Node *toDelete = curr;
+                Node *nextNode = curr->next;
+
+                // case 1: delete first node
+                if (curr == head)
+                {
+                    head = curr->next;
+                    if (head)
+                        head->prev = nullptr;
+                }
+                else if (curr == tail)
+                {
+                    // case 2: delete last node
+                    tail = curr->prev;
+                    if (tail)
+                        tail->next = nullptr;
+                }
+                else
+                {
+                    // case 3: delete middle node
+                    curr->prev->next = curr->next;
+                    if (curr->next)
+                        curr->next->prev = curr->prev;
+                }
+
+                toDelete->prev = toDelete->next = nullptr;
+                delete toDelete;
+                length--;
+
+                // update curr
+                curr = nextNode;
+            }
+            else
+            {
+                curr = curr->next;
             }
         }
     }
@@ -378,10 +435,28 @@ int main()
     cout << "Found 30: " << (dll.find(30) ? "Yes" : "No") << endl;   // Yes
     cout << "Found 10: " << (dll.find(10) ? "Yes" : "No") << "\n\n"; // No
 
-    dll.deleteValue(200); // delete 200
-    dll.deleteValue(30);  // delete 300
+    // insert more duplicate values
+    dll.push_front(30);
+    dll.push_front(30);
+    dll.push_front(30);
+    dll.push_back(30);
+    dll.push_back(30);
+    dll.push_back(30);
 
-    dll.print(); // Empty List!
+    dll.print(); // NULL <= 30 <=> 30 <=> 30 <=> 200 <=> 30 <=> 30 <=> 30 <=> 30 => NULL
+
+    // delete first occurence only
+    dll.deleteValue(30); // delete 30
+    dll.deleteValue(30); // delete 30
+
+    dll.print(); // NULL <= 30 <=> 200 <=> 30 <=> 30 <=> 30 <=> 30 => NULL
+
+    dll.deleteValueAll(30); // delete all 30
+
+    dll.print(); // NULL <= 200 => NULL
+
+    cout << "Front: " << dll.front() << endl; // 200
+    cout << "Back: " << dll.back() << endl;   // 200
 
     return 0;
 }
