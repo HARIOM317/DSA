@@ -11,7 +11,7 @@ for i=1 to n-1
 {
     if arr[i]>arr[i-1]
         swap(arr, i, i-1)
-    
+
     if arr[i]>arr[i+1] && i<=n-2
         swap(arr, i, i+1)
 
@@ -21,19 +21,20 @@ for i=1 to n-1
 Time complexity = O(n/2) = O(n)
 */
 
-
 #include <iostream>
 
 using namespace std;
 
-void swap(int arr[], int i, int j){
+void swap(int arr[], int i, int j)
+{
     int temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
 }
 
-void waveSort(int arr[], int n){
-    for (int i = 1; i < n; i+=2)
+void waveSort(int arr[], int n)
+{
+    for (int i = 1; i < n; i += 2)
     {
         if (arr[i] > arr[i - 1])
         {
@@ -46,14 +47,15 @@ void waveSort(int arr[], int n){
     }
 }
 
-int main(){
+int main()
+{
     int arr[] = {1, 3, 4, 7, 5, 6, 2, 11, 13, 14, 9, 22};
 
     waveSort(arr, 12);
 
     for (int i = 0; i < 12; i++)
     {
-        cout<<arr[i]<<" ";
+        cout << arr[i] << " ";
     }
 
     return 0;

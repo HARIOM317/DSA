@@ -65,5 +65,6 @@
     "regex": "cpp",
     "valarray": "cpp",
     "random": "cpp"
-  }
+  },
+  "cSpell.words": ["Heapified"]
 }

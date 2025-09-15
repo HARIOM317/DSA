@@ -13,17 +13,13 @@ struct Job
     int profit;
 };
 
-bool cmp(Job a, Job b)
-{
-    return a.profit > b.profit;
-}
-
 pair<int, int> jobScheduling(vector<Job> jobs)
 {
     int n = jobs.size();
 
     // sort jobs in decreasing order on the basis of profit
-    sort(jobs.begin(), jobs.end(), cmp);
+    sort(jobs.begin(), jobs.end(), [](Job &a, Job &b)
+         { return a.profit > b.profit; }); // lambda compare function
 
     // get maximum deadline
     int maxDeadline = 0;

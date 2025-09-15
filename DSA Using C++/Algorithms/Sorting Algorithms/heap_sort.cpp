@@ -61,7 +61,6 @@ int main()
     vector<int> arr = {9, 4, 3, 8, 10, 2, 5};
 
     heapSort(arr);
-
     print(arr);
 
     return 0;
