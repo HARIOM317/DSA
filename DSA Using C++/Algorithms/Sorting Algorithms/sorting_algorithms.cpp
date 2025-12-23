@@ -68,6 +68,7 @@ void selectionSort(vector<int> arr)
 // insertion sort [Time complexity: O(n^2)]
 void insertionSort(vector<int> arr)
 {
+    int count = 0;
     for (int i = 1; i < arr.size(); i++)
     {
         int current = arr[i], prev = i - 1;
@@ -77,6 +78,8 @@ void insertionSort(vector<int> arr)
             prev--;
         }
         arr[prev + 1] = current;
+        count++;
+        cout << "Count: " << count << endl;
     }
 
     // printing array
